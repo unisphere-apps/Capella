@@ -1,22 +1,137 @@
 ﻿@page
 @model Capella.Pages.LoginModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Connexion";
 }
 
-<h1>Login</h1>
+<style>
+    body {
+        background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-<form method="post">
-    <label for="email">Email :</label>
-    <input type="email" id="email" name="email" asp-for="Email" required />
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
 
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" name="password" asp-for="Password" required />
+    .login-card {
+        background-color: #ffffff;
+        padding: 40px 30px;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        max-width: 400px;
+        width: 100%;
+        animation: fadeIn 0.8s ease-out;
+    }
 
-    <button type="submit">Se connecter</button>
-</form>
+    @* Razor voit @keyframes comme une instruction C#, on l'échappe avec @@ *@
+    @@keyframes fadeIn {
+        from
 
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <p style="color: red">@Model.ErrorMessage</p>
-}
+    {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #343a40;
+        font-weight: bold;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        color: #495057;
+        font-weight: 600;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 16px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease-in-out;
+    }
+
+    input:focus {
+        border-color: #17a2b8;
+        background-color: #fff;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+        }
+
+    .error-message {
+        margin-top: 15px;
+        color: #e63946;
+        background-color: #ffe5e5;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 600;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <h1>Connexion</h1>
+        <form method="post">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" asp-for="Email" required />
+
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" asp-for="Password" required />
+
+            <button type="submit">Se connecter</button>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <p class="error-message">@Model.ErrorMessage</p>
+        }
+    </div>
+</div>

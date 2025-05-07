@@ -1,73 +1,86 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Capella</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Capella.styles.css" asp-append-version="true" />
-</head>
-<style>
-    footer {
-        text-align: center;
-        padding: 10px 20px;
-        background-color: #f1f1f1;
-        border-top: 1px solid #ddd;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        font-size: 0.9em;
-        color: #666;
-    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-        footer a {
-            color: #007bff;
-            text-decoration: none;
+    <style>
+        body {
+            color: #212529; /* Presque noir */
+            background-color: #f4f6fa;
         }
 
-            footer a:hover {
+        .navbar {
+            height: 60px;
+            padding: 0 1rem;
+            font-size: 0.95rem;
+        }
+
+            .navbar .navbar-brand {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+
+
+            .navbar-brand:hover, .nav-link:hover {
                 text-decoration: underline;
             }
-</style>
+
+        .container {
+            max-width: 860px;
+            margin: 40px auto 20px auto;
+            padding: 15px;
+        }
+
+
+        footer {
+            background-color: #343a40;
+            color: #ccc;
+            padding: 20px 0;
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+            footer a {
+                color: #f8f9fa;
+                text-decoration: underline;
+            }
+
+        h1, h2 {
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
 <body>
     <header>
         @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
         {
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">Capella</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                            </li>
-                            @if (Context.Session.GetString("UserRole") == "2" || Context.Session.GetString("UserRole") == "3")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/AdminPanel">Administration</a>
-                                </li>
-                            }
-                        </ul>
+            <nav class="navbar navbar-dark" style="background: linear-gradient(to right, #007bff, #0056b3); padding: 10px 20px;">
+                <div class="container-fluid d-flex justify-content-between">
+                    <a class="navbar-brand text-white" asp-page="/Index" style="font-weight: bold;">Capella</a>
+                    <div>
+                        <a class="nav-link text-white" asp-page="/AdminPanel" style="display: inline-block; margin-right: 10px;">Administration</a>
                     </div>
                 </div>
             </nav>
+
         }
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer>
-        &copy; 2025 - Capella - <a asp-area="" asp-page="/Privacy">Privacy</a>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

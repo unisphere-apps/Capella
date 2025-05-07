@@ -4,78 +4,160 @@
     ViewData["Title"] = "Panel Administrateur";
 }
 
-<h1>Panel Administrateur</h1>
+<style>
+    body {
+        background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-<!-- Bouton de déconnexion -->
-<div style="margin-bottom: 20px; text-align: right;">
-    <form method="post" asp-page-handler="Logout">
-        <button type="submit" style="padding: 10px 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px;">
-            Déconnexion
-        </button>
-    </form>
-</div>
+    .admin-wrapper {
+        max-width: 2000px; /* élargi */
+        margin: 50px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.6s ease-out;
+    }
 
-<hr />
 
-<!-- Section Gestion des Publications -->
-<section>
-    <h2>Gestion des Publications</h2>
+    h1, h2 {
+        color: #343a40;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
 
-    <!-- Filtres pour les publications -->
-    <div style="margin-bottom: 15px;">
-        <input id="postSearchInput" type="text" placeholder="Rechercher une publication ou un auteur..." style="padding: 10px; width: 300px; margin-right: 10px;" />
+    button {
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
 
-        <label for="postDateFrom">De :</label>
-        <input id="postDateFrom" type="date" style="padding: 5px; margin-right: 10px;" />
+        button:hover {
+            opacity: 0.9;
+        }
 
-        <label for="postDateTo">À :</label>
-        <input id="postDateTo" type="date" style="padding: 5px; margin-right: 10px;" />
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 0.95rem;
+    }
 
-        <button id="resetFilters" type="button" style="padding: 5px 10px; background-color: #6c757d; color: white; border: none; border-radius: 5px;">
-            Réinitialiser les filtres
-        </button>
+    th, td {
+        border: 1px solid #dee2e6;
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f1f3f5;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    input[type="text"], input[type="date"] {
+        border: 1px solid #ced4da;
+        padding: 8px 10px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+    }
+
+    .btn-muted {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="admin-wrapper">
+    <h1>Panel Administrateur</h1>
+
+    <!-- Bouton de déconnexion -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <form method="post" asp-page-handler="Logout">
+            <button type="submit" class="btn-danger">Déconnexion</button>
+        </form>
     </div>
 
-    <!-- Tableau des publications -->
-    <table id="postTable" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-        <thead>
-            <tr>
-                <th style="border: 1px solid #ccc; padding: 10px;">Auteur</th>
-                <th style="border: 1px solid #ccc; padding: 10px;">Contenu</th>
-                <th style="border: 1px solid #ccc; padding: 10px;">
-                    Date
-                    <button id="sortDateAsc" type="button" style="background: none; border: none; color: blue; cursor: pointer;">▲</button>
-                    <button id="sortDateDesc" type="button" style="background: none; border: none; color: blue; cursor: pointer;">▼</button>
-                </th>
-                <th style="border: 1px solid #ccc; padding: 10px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var post in Model.Posts)
-            {
+    <hr />
+
+    <!-- Gestion des Publications -->
+    <section>
+        <h2>Gestion des Publications</h2>
+
+        <!-- Filtres -->
+        <div style="margin-bottom: 20px;">
+            <input id="postSearchInput" type="text" placeholder="Rechercher une publication ou un auteur..." style="width: 300px; margin-right: 10px;" />
+            <label for="postDateFrom">De :</label>
+            <input id="postDateFrom" type="date" />
+            <label for="postDateTo">À :</label>
+            <input id="postDateTo" type="date" />
+            <button id="resetFilters" type="button" class="btn-muted" style="margin-left: 10px;">Réinitialiser</button>
+        </div>
+
+        <table id="postTable">
+            <thead>
                 <tr>
-                    <td class="post-author" style="border: 1px solid #ccc; padding: 10px;">@post.User.Nom @post.User.Prenom</td>
-                    <td class="post-content" style="border: 1px solid #ccc; padding: 10px;">@post.Contenu</td>
-                    <td class="post-date" data-date="@post.CreatedAt.ToString("yyyy-MM-dd")" style="border: 1px solid #ccc; padding: 10px;">
-                        @post.CreatedAt.ToString("g")
-                    </td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">
-                        <form method="post" asp-page-handler="DeletePost">
-                            <input type="hidden" name="PostId" value="@post.Id_Post" />
-                            <button type="submit" style="background-color: #dc3545; color: white; padding: 5px 10px; border: none; border-radius: 5px;">
-                                Supprimer
-                            </button>
-                        </form>
-                    </td>
+                    <th>Auteur</th>
+                    <th>Contenu</th>
+                    <th>
+                        Date
+                        <button id="sortDateAsc" type="button" style="border: none; background: none; color: blue;">▲</button>
+                        <button id="sortDateDesc" type="button" style="border: none; background: none; color: blue;">▼</button>
+                    </th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</section>
+            </thead>
+            <tbody>
+                @foreach (var post in Model.Posts)
+                {
+                    <tr>
+                        <td class="post-author">@post.User.Nom @post.User.Prenom</td>
+                        <td class="post-content">@post.Contenu</td>
+                        <td class="post-date" data-date="@post.CreatedAt.ToString("yyyy-MM-dd")">
+                            @post.CreatedAt.ToString("g")
+                        </td>
+                        <td>
+                            <form method="post" asp-page-handler="DeletePost">
+                                <input type="hidden" name="PostId" value="@post.Id_Post" />
+                                <button type="submit" class="btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
 
 @section Scripts {
     <script>
-        // Variables pour le tri et la recherche
         const postSearchInput = document.getElementById('postSearchInput');
         const postDateFrom = document.getElementById('postDateFrom');
         const postDateTo = document.getElementById('postDateTo');
@@ -84,11 +166,15 @@
         const sortDateDesc = document.getElementById('sortDateDesc');
         const postTableRows = Array.from(document.querySelectorAll('#postTable tbody tr'));
 
-        // Recherche dans le contenu et le nom/prénom des auteurs
         postSearchInput.addEventListener('input', filterPosts);
         postDateFrom.addEventListener('change', filterPosts);
         postDateTo.addEventListener('change', filterPosts);
-        resetFilters.addEventListener('click', resetAllFilters);
+        resetFilters.addEventListener('click', () => {
+            postSearchInput.value = '';
+            postDateFrom.value = '';
+            postDateTo.value = '';
+            filterPosts();
+        });
 
         function filterPosts() {
             const searchValue = postSearchInput.value.toLowerCase();
@@ -98,7 +184,7 @@
             postTableRows.forEach(row => {
                 const author = row.querySelector('.post-author').textContent.toLowerCase();
                 const content = row.querySelector('.post-content').textContent.toLowerCase();
-                const date = new Date(row.querySelector('.post-date').getAttribute('data-date'));
+                const date = new Date(row.querySelector('.post-date').dataset.date);
 
                 const matchesSearch = author.includes(searchValue) || content.includes(searchValue);
                 const matchesDate = (!dateFrom || date >= dateFrom) && (!dateTo || date <= dateTo);
@@ -107,26 +193,17 @@
             });
         }
 
-        // Réinitialiser les filtres
-        function resetAllFilters() {
-            postSearchInput.value = '';
-            postDateFrom.value = '';
-            postDateTo.value = '';
-            filterPosts();
-        }
+        sortDateAsc.addEventListener('click', () => sortPosts(true));
+        sortDateDesc.addEventListener('click', () => sortPosts(false));
 
-        // Tri des publications par date
-        sortDateAsc.addEventListener('click', () => sortPostsByDate(true));
-        sortDateDesc.addEventListener('click', () => sortPostsByDate(false));
-
-        function sortPostsByDate(ascending) {
+        function sortPosts(ascending) {
             const tbody = document.querySelector('#postTable tbody');
-            const sortedRows = postTableRows.sort((a, b) => {
-                const dateA = new Date(a.querySelector('.post-date').getAttribute('data-date'));
-                const dateB = new Date(b.querySelector('.post-date').getAttribute('data-date'));
+            const sorted = postTableRows.sort((a, b) => {
+                const dateA = new Date(a.querySelector('.post-date').dataset.date);
+                const dateB = new Date(b.querySelector('.post-date').dataset.date);
                 return ascending ? dateA - dateB : dateB - dateA;
             });
-            sortedRows.forEach(row => tbody.appendChild(row));
+            sorted.forEach(row => tbody.appendChild(row));
         }
     </script>
 }
